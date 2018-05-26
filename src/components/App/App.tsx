@@ -1,20 +1,36 @@
 import * as React from 'react';
-import './App.css';
 
-import logo from '../../images/logo.svg';
+import imageData from '../../data/imageDatas';
+require('./App.less');
+
+interface ImageArrType {
+  disc: string,
+  fileName: string,
+  title: string,
+  imageUrl?: any
+}
+
+const imageArr: ImageArrType[] = imageData.map((item, index): ImageArrType => {
+  // tslint:disable-next-line:no-var-requires
+  const transformUrl = require(`../../images/${item.fileName}`);
+  return {
+    ...item,
+    imageUrl: transformUrl
+  }
+});
+
+console.log(imageArr);
 
 class App extends React.Component {
+  // constructor(props: object) {
+  //   super(props)
+  // }
   public render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
+      <section className="stage">
+        <section className="img-sec"></section>
+        <nav className="controller-nav"></nav>
+      </section>
     );
   }
 }
