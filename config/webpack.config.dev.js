@@ -189,6 +189,7 @@ module.exports = {
                     require('postcss-flexbugs-fixes'),
                     autoprefixer({
                       browsers: [
+                        "Android > 4.1",
                         '>1%',
                         'last 4 versions',
                         'Firefox ESR',

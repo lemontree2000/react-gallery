@@ -25,6 +25,10 @@ const getRangeRandom = (low: number, high: number): number => {
   return Math.ceil(Math.random() * (high - low) + low)
 }
 
+const get30DegRandom = (): string => {
+  return (Math.random() > 0.5 ? '' : '-') + Math.ceil(Math.random() * 30) + 'deg';
+}
+
 
 const imageArr: IimageArrType[] = imageData.map((item, index): IimageArrType => {
   // tslint:disable-next-line:no-var-requires
@@ -38,14 +42,19 @@ const imageArr: IimageArrType[] = imageData.map((item, index): IimageArrType => 
 
 // ImgFigure 组件
 const ImgFigure = (props: IimageArrType): JSX.Element => {
+  // 如果props属性中指点了这张图片的位置，则使用
   const styles = props.arrange.pos ? props.arrange.pos : {};
+  if (props.arrange.rotate) {
+    styles.transform= `rotate(${props.arrange.rotate})`;
+  }
+
   return (
-    <figure 
-      className="img-figure" 
+    <figure
+      className="img-figure"
       style={styles}
       ref={(node) => { props.imgRef(node, props.index) }}
     >
-      <img src={props.imageUrl} alt={props.title} />
+      <img  src={props.imageUrl} alt={props.title} />
       <figcaption>
         <h2 className="img-title">{props.title}</h2>
       </figcaption>
@@ -82,7 +91,8 @@ class App extends React.Component {
         //   pos: {
         //     left: '0',
         //     top: '0'
-        //   }
+        //   },
+        //   rotate: 0
         // }
       ]
     }
@@ -113,16 +123,22 @@ class App extends React.Component {
     const imgsArrangeCenterArr: any[0] = imgsArrangeArr.splice(centerIndex, 1)
     // 首先居中 centerIndex 的图片
     imgsArrangeCenterArr[0].pos = centerPos;
-    console.log(imgsArrangeCenterArr);
+
+    // 居中的centerIndex的图片不需要旋转
+    imgsArrangeCenterArr[0].rotate = 0;
+
     // 取出要布局上侧的图片的状态信息
-    topImgSpliceIndex = Math.ceil(Math.random() * (imgsArrangeArr.length - topImgNum));
+    topImgSpliceIndex = Math.floor(Math.random() * (imgsArrangeArr.length - topImgNum));
     imgsArrangeTopArr = imgsArrangeArr.splice(topImgSpliceIndex, topImgNum);
 
     // 布局位于上侧的图片
     imgsArrangeTopArr.forEach((item: any, index: number) => {
-      imgsArrangeTopArr[index].pos = {
-        left: getRangeRandom(vPosRangeX[0], vPosRangeX[1]),
-        top: getRangeRandom(vPosRangeTopY[0], vPosRangeTopY[1])
+      imgsArrangeTopArr[index] = {
+        pos: {
+          left: getRangeRandom(vPosRangeX[0], vPosRangeX[1]),
+          top: getRangeRandom(vPosRangeTopY[0], vPosRangeTopY[1])
+        },
+        rotate: get30DegRandom()
       }
     })
 
@@ -138,21 +154,23 @@ class App extends React.Component {
         hPosRangeLORX = hPosRangeRightSecX;
       }
 
-      imgsArrangeArr[i].pos = {
-        left: getRangeRandom(hPosRangeLORX[0], hPosRangeLORX[1]),
-        top: getRangeRandom(hPosRangeY[0], hPosRangeY[1])
+      imgsArrangeArr[i] = {
+        pos: {
+          left: getRangeRandom(hPosRangeLORX[0], hPosRangeLORX[1]),
+          top: getRangeRandom(hPosRangeY[0], hPosRangeY[1])
+        },
+        rotate: get30DegRandom()
       }
     }
 
     if (imgsArrangeTopArr && imgsArrangeTopArr[0]) {
       imgsArrangeArr.splice(topImgSpliceIndex, 0, imgsArrangeTopArr[0])
     }
-    imgsArrangeArr.splice(centerIndex, 1, imgsArrangeCenterArr[0]);
-    console.log(imgsArrangeArr);
+    imgsArrangeArr.splice(centerIndex, 0, imgsArrangeCenterArr[0]);
     this.setState({
       imgsArrangeArr
     });
-
+    console.log(imgsArrangeArr);
   }
   // 组件挂载以后， 为每张图片计算其位置的范围
   public componentDidMount() {
@@ -206,7 +224,8 @@ class App extends React.Component {
                   pos: {
                     left: 0,
                     top: 0
-                  }
+                  },
+                  rotate: 0
                 }
               }
               return (
