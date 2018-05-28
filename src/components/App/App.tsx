@@ -1,16 +1,18 @@
 import * as React from 'react';
-
 import imageData from '../../data/imageDatas';
+import ImgFigure from "../ImgFigure/ImgFigure";
+
 require('./App.less');
 
-interface IimageArrType {
+export interface IimageArrType {
   disc: string,
   fileName: string,
   title: string,
   imageUrl?: any,
   imgRef?: any,
-  index?: number
-  arrange?: any
+  index?: number,
+  arrange?: any,
+  inverse?: any
 }
 interface IstateType {
   imgsArrangeArr: any
@@ -41,26 +43,7 @@ const imageArr: IimageArrType[] = imageData.map((item, index): IimageArrType => 
 
 
 // ImgFigure 组件
-const ImgFigure = (props: IimageArrType): JSX.Element => {
-  // 如果props属性中指点了这张图片的位置，则使用
-  const styles = props.arrange.pos ? props.arrange.pos : {};
-  if (props.arrange.rotate) {
-    styles.transform= `rotate(${props.arrange.rotate})`;
-  }
 
-  return (
-    <figure
-      className="img-figure"
-      style={styles}
-      ref={(node) => { props.imgRef(node, props.index) }}
-    >
-      <img  src={props.imageUrl} alt={props.title} />
-      <figcaption>
-        <h2 className="img-title">{props.title}</h2>
-      </figcaption>
-    </figure>
-  )
-};
 
 
 class App extends React.Component {
@@ -85,6 +68,7 @@ class App extends React.Component {
   constructor(props: object) {
     super(props);
     this.bindImgRefs = this.bindImgRefs.bind(this);
+    this.inverse = this.inverse.bind(this);
     this.state = {
       imgsArrangeArr: [
         // {
@@ -92,7 +76,8 @@ class App extends React.Component {
         //     left: '0',
         //     top: '0'
         //   },
-        //   rotate: 0
+        //   rotate: 0,
+        //   isInverse: false
         // }
       ]
     }
@@ -107,6 +92,19 @@ class App extends React.Component {
   }
 
   /**
+   * 
+   * @param index 要翻转图片的index
+   */
+  public inverse(index: number): any {
+    return () => {
+      const imgsArrangeArr = this.state.imgsArrangeArr;
+      imgsArrangeArr[index].isInverse = !imgsArrangeArr[index].isInverse;
+      this.setState({
+        imgsArrangeArr
+      })
+    };
+  }
+  /**
    * 重新布局所有图片
    * @param centerIndex 指定中心是哪个图片
    */
@@ -118,7 +116,7 @@ class App extends React.Component {
     const { x: vPosRangeX, topY: vPosRangeTopY } = vPosRange;
 
     let imgsArrangeTopArr: any[0] = [];
-    const topImgNum = Math.ceil(Math.random() * 2);
+    const topImgNum = Math.floor(Math.random() * 2);
     let topImgSpliceIndex = 0;
     const imgsArrangeCenterArr: any[0] = imgsArrangeArr.splice(centerIndex, 1)
     // 首先居中 centerIndex 的图片
@@ -128,7 +126,7 @@ class App extends React.Component {
     imgsArrangeCenterArr[0].rotate = 0;
 
     // 取出要布局上侧的图片的状态信息
-    topImgSpliceIndex = Math.floor(Math.random() * (imgsArrangeArr.length - topImgNum));
+    topImgSpliceIndex = Math.ceil(Math.random() * (imgsArrangeArr.length - topImgNum));
     imgsArrangeTopArr = imgsArrangeArr.splice(topImgSpliceIndex, topImgNum);
 
     // 布局位于上侧的图片
@@ -144,6 +142,7 @@ class App extends React.Component {
 
     // 布局左右两侧的图片
     // tslint:disable-next-line:prefer-for-of
+    
     for (let i = 0; i < imgsArrangeArr.length; i++) {
       const k = imgsArrangeArr.length / 2;
       let hPosRangeLORX = null;
@@ -153,7 +152,6 @@ class App extends React.Component {
       } else {
         hPosRangeLORX = hPosRangeRightSecX;
       }
-
       imgsArrangeArr[i] = {
         pos: {
           left: getRangeRandom(hPosRangeLORX[0], hPosRangeLORX[1]),
@@ -213,7 +211,7 @@ class App extends React.Component {
 
   public render() {
     // const controllerUnits = [];
-
+    
     return (
       <section className="stage" ref={(node: any) => { this.stageDom = node }}>
         <section className="img-sec">
@@ -221,6 +219,7 @@ class App extends React.Component {
             imageArr.map((item, index) => {
               if (!this.state.imgsArrangeArr[index]) {
                 this.state.imgsArrangeArr[index] = {
+                  isInverse: false,
                   pos: {
                     left: 0,
                     top: 0
@@ -232,6 +231,7 @@ class App extends React.Component {
                 <ImgFigure
                   key={index} {...item}
                   index={index}
+                  inverse={this.inverse(index)}
                   arrange={this.state.imgsArrangeArr[index]}
                   imgRef={this.bindImgRefs}
                 />

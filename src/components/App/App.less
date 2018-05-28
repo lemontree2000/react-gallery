@@ -21,6 +21,11 @@
                 padding: 40px;
                 box-sizing: border-box;
                 background-color: #fff;
+                cursor: pointer;
+                transform-style: preserve-3d;
+                &.is-inverse {
+                    transform: rotateX(180deg)
+                }
             }
             figcaption {
                 text-align: center;
