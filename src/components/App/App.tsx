@@ -78,7 +78,8 @@ class App extends React.Component {
         //     top: '0'
         //   },
         //   rotate: 0,
-        //   isInverse: false
+        //   isInverse: false,
+        //   isCenter: false,
         // }
       ]
     }
@@ -127,10 +128,12 @@ class App extends React.Component {
     let topImgSpliceIndex = 0;
     const imgsArrangeCenterArr: any[0] = imgsArrangeArr.splice(centerIndex, 1)
     // 首先居中 centerIndex 的图片
-    imgsArrangeCenterArr[0].pos = centerPos;
-
     // 居中的centerIndex的图片不需要旋转
-    imgsArrangeCenterArr[0].rotate = 0;
+    imgsArrangeCenterArr[0] = {
+      isCenter: true,
+      pos: centerPos,
+      rotate: 0,
+    }
 
     // 取出要布局上侧的图片的状态信息
     topImgSpliceIndex = Math.ceil(Math.random() * (imgsArrangeArr.length - topImgNum));
@@ -139,6 +142,7 @@ class App extends React.Component {
     // 布局位于上侧的图片
     imgsArrangeTopArr.forEach((item: any, index: number) => {
       imgsArrangeTopArr[index] = {
+        isCenter: false,
         pos: {
           left: getRangeRandom(vPosRangeX[0], vPosRangeX[1]),
           top: getRangeRandom(vPosRangeTopY[0], vPosRangeTopY[1])
@@ -160,11 +164,12 @@ class App extends React.Component {
         hPosRangeLORX = hPosRangeRightSecX;
       }
       imgsArrangeArr[i] = {
+        isCenter: false,
         pos: {
           left: getRangeRandom(hPosRangeLORX[0], hPosRangeLORX[1]),
           top: getRangeRandom(hPosRangeY[0], hPosRangeY[1])
         },
-        rotate: get30DegRandom()
+        rotate: get30DegRandom(),
       }
     }
 
@@ -175,7 +180,6 @@ class App extends React.Component {
     this.setState({
       imgsArrangeArr
     });
-    console.log(imgsArrangeArr);
   }
   // 组件挂载以后， 为每张图片计算其位置的范围
   public componentDidMount() {

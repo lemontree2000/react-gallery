@@ -10,19 +10,26 @@ class ImgFigure extends React.Component<IimageArrType, {}> {
         // console.log(this.props);
     }
     public handleClick(e: any) {
+        if (this.props.arrange.isCenter) {
+            this.props.inverse();
+        } else {
+            this.props.center();
+        }
         e.preventDefault();
         e.stopPropagation();
-        
-        this.props.inverse();
     }
     public render() {
         let styles: any = {};
         if (this.props.arrange.pos) {
-            styles = this.props.arrange.pos;
+            // 防止内存引用 
+            styles = Object.assign({}, this.props.arrange.pos);
         }
 
-        if (this.props.arrange.rotate && !styles.transform) {
+        if (this.props.arrange.rotate) {
             styles.transform = `rotate(${this.props.arrange.rotate})`;
+        }
+        if (this.props.arrange.isCenter) {
+            styles.zIndex = 11;
         }
 
         let imgFigureClassName = 'img-figure';
