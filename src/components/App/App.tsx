@@ -12,7 +12,8 @@ export interface IimageArrType {
   imgRef?: any,
   index?: number,
   arrange?: any,
-  inverse?: any
+  inverse?: any,
+  center?: any
 }
 interface IstateType {
   imgsArrangeArr: any
@@ -104,6 +105,12 @@ class App extends React.Component {
       })
     };
   }
+
+  public center(index: number) {
+    return () => {
+      this.rearrange(index)
+    }
+  }
   /**
    * 重新布局所有图片
    * @param centerIndex 指定中心是哪个图片
@@ -142,7 +149,7 @@ class App extends React.Component {
 
     // 布局左右两侧的图片
     // tslint:disable-next-line:prefer-for-of
-    
+
     for (let i = 0; i < imgsArrangeArr.length; i++) {
       const k = imgsArrangeArr.length / 2;
       let hPosRangeLORX = null;
@@ -211,7 +218,7 @@ class App extends React.Component {
 
   public render() {
     // const controllerUnits = [];
-    
+
     return (
       <section className="stage" ref={(node: any) => { this.stageDom = node }}>
         <section className="img-sec">
@@ -219,6 +226,7 @@ class App extends React.Component {
             imageArr.map((item, index) => {
               if (!this.state.imgsArrangeArr[index]) {
                 this.state.imgsArrangeArr[index] = {
+                  isCenter: false,
                   isInverse: false,
                   pos: {
                     left: 0,
@@ -234,6 +242,7 @@ class App extends React.Component {
                   inverse={this.inverse(index)}
                   arrange={this.state.imgsArrangeArr[index]}
                   imgRef={this.bindImgRefs}
+                  center={this.center(index)}
                 />
               )
             })

@@ -9,20 +9,25 @@ class ImgFigure extends React.Component<IimageArrType, {}> {
     public componentWillMount() {
         // console.log(this.props);
     }
-    public handleClick(e:any) {
+    public handleClick(e: any) {
         e.preventDefault();
         e.stopPropagation();
-        console.log(1);
+        
         this.props.inverse();
     }
     public render() {
-        const styles = this.props.arrange.pos ? this.props.arrange.pos : {};
+        let styles: any = {};
+        if (this.props.arrange.pos) {
+            styles = this.props.arrange.pos;
+        }
+
         if (this.props.arrange.rotate && !styles.transform) {
             styles.transform = `rotate(${this.props.arrange.rotate})`;
         }
 
         let imgFigureClassName = 'img-figure';
         imgFigureClassName += this.props.arrange.isInverse ? ' is-inverse' : '';
+
         return (
             <figure
                 className={imgFigureClassName}
