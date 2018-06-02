@@ -1,6 +1,7 @@
 import * as React from 'react';
 import imageData from '../../data/imageDatas';
-import ImgFigure from "../ImgFigure/ImgFigure";
+import ControllerUnit from '../ControllerUnit/ControllerUnit';
+import ImgFigure from '../ImgFigure/ImgFigure';
 
 require('./App.less');
 
@@ -221,7 +222,7 @@ class App extends React.Component {
   }
 
   public render() {
-    // const controllerUnits = [];
+    const controllerUnits:any = [];
 
     return (
       <section className="stage" ref={(node: any) => { this.stageDom = node }}>
@@ -239,6 +240,7 @@ class App extends React.Component {
                   rotate: 0
                 }
               }
+              controllerUnits.push(<ControllerUnit key={index}/>)
               return (
                 <ImgFigure
                   key={index} {...item}
@@ -252,7 +254,11 @@ class App extends React.Component {
             })
           }
         </section>
-        <nav className="controller-nav"></nav>
+        <nav className="controller-nav">
+        {
+         controllerUnits
+        }
+        </nav>
       </section>
     );
   }
