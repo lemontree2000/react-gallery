@@ -222,7 +222,7 @@ class App extends React.Component {
   }
 
   public render() {
-    const controllerUnits:any = [];
+    const controllerUnits: any = [];
 
     return (
       <section className="stage" ref={(node: any) => { this.stageDom = node }}>
@@ -240,7 +240,13 @@ class App extends React.Component {
                   rotate: 0
                 }
               }
-              controllerUnits.push(<ControllerUnit key={index}/>)
+              controllerUnits.push(
+                <ControllerUnit
+                  inverse={this.inverse(index)}
+                  arrange={this.state.imgsArrangeArr[index]}
+                  center={this.center(index)}
+                  key={index} />
+              )
               return (
                 <ImgFigure
                   key={index} {...item}
@@ -255,9 +261,9 @@ class App extends React.Component {
           }
         </section>
         <nav className="controller-nav">
-        {
-         controllerUnits
-        }
+          {
+            controllerUnits
+          }
         </nav>
       </section>
     );
