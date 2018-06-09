@@ -22,3 +22,8 @@
 ```javascript
 npm start
 ```
+
+# 总结
+
+[https://lemontree2000.github.io](https://lemontree2000.github.io/2018/06/08/React-TypeScript%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/)
+

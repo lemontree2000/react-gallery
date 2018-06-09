@@ -29,6 +29,7 @@ const getRangeRandom = (low: number, high: number): number => {
   return Math.ceil(Math.random() * (high - low) + low)
 }
 
+
 const get30DegRandom = (): string => {
   return (Math.random() > 0.5 ? '' : '-') + Math.ceil(Math.random() * 30) + 'deg';
 }
@@ -45,8 +46,6 @@ const imageArr: IimageArrType[] = imageData.map((item, index): IimageArrType => 
 
 
 // ImgFigure 组件
-
-
 
 class App extends React.Component {
   [x: string]: any;
@@ -186,6 +185,7 @@ class App extends React.Component {
   public componentDidMount() {
     const stageDom = this.stageDom;
     const figureImgDom = this.figureImgDom1
+    this.rearrange(0);
     // 获取舞台大小
     const stageW = stageDom.scrollWidth;
     const stageH = stageDom.scrollHeight;
@@ -225,7 +225,7 @@ class App extends React.Component {
     const controllerUnits: any = [];
 
     return (
-      <section className="stage" ref={(node: any) => { this.stageDom = node }}>
+      <section className="stage" ref={(node: HTMLElement) => { this.stageDom = node }}>
         <section className="img-sec">
           {
             imageArr.map((item, index) => {
